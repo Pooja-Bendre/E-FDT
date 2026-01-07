@@ -2130,3 +2130,25 @@ body {
     display: inline-block;
     animation: verifiedCheck 0.5s ease-out;
 }
+
+.wallet-badge {
+    /* existing styles... */
+    background: linear-gradient(135deg, #FF0011, #C70009) !important; /* ADD THIS */
+}
+
+.network-badge {
+    background: linear-gradient(135deg, #FF0011, #C70009);
+    /* keep other properties */
+}
+
+/* CASPER HACKATHON 2026 - RED THEME */
+:root {
+    --casper-red: #FF0011;
+    --casper-dark-red: #C70009;
+    --casper-black: #0A0A0A;
+}
+.main-header {
+    background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+
+.main-header {
+    background: linear-gradient(-45deg, #FF0011, #C70009, #8B0000, #FF0011);
