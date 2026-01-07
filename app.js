@@ -239,57 +239,90 @@ function switchTab(tabName) {
   document.getElementById(tabName + "Tab").classList.add("active");
 }
 
-async function recordOnCasperBlockchain(action, data) {
+async function recordOnCasper(action, data) {
     console.log('📝 Recording on Casper:', action, data);
     
     try {
-        if (!casperWalletConnected) {
-            console.warn('⚠️ Casper wallet not connected');
+        // Check if Casper Signer is available
+        if (!window.casperlabsHelper) {
+            console.error('❌ Casper Signer not found');
+            return { success: false, error: 'signer_not_found' };
+        }
+        
+        // Check connection
+        const isConnected = await window.casperlabsHelper.isConnected();
+        if (!isConnected) {
+            console.error('❌ Wallet not connected');
             return { success: false, error: 'wallet_not_connected' };
         }
-
-        const deployData = {
-            platform: 'E-FDT-Casper-Hackathon-2026',
+        
+        // Get active public key
+        const activeKey = await window.casperlabsHelper.getActivePublicKey();
+        console.log('📤 Sending from:', activeKey);
+        
+        // Create the deploy metadata
+        const timestamp = Date.now();
+        const metadata = JSON.stringify({
+            platform: 'E-FDT',
+            action: action,
+            ...data,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Create a simple transfer deploy
+        const deployParams = {
+            payment: '1000000000', // 1 CSPR
+            session: {
+                transfer: {
+                    amount: '2500000000', // 2.5 CSPR
+                    target: activeKey
+                }
+            }
+        };
+        
+        console.log('✍️ Requesting signature...');
+        
+        // Sign the deploy
+        const deploy = await window.casperlabsHelper.sign(
+            JSON.stringify(deployParams),
+            activeKey
+        );
+        
+        console.log('📤 Sending to blockchain...');
+        
+        // Send deploy
+        const deployHash = await CASPER_SERVICE.deploy(deploy);
+        
+        // 🔥 CASPER EXPLORER LINK - DIRECT LINK!
+        const explorerUrl = `https://testnet.cspr.live/deploy/${deployHash}`;
+        
+        console.log('✅ SUCCESS! Deploy Hash:', deployHash);
+        console.log('🔗 Explorer:', explorerUrl);
+        
+        // Store transaction
+        onChainTransactions.push({
+            hash: deployHash,              // Changed from 'signature' to 'hash'
             action: action,
             data: data,
             timestamp: new Date().toISOString(),
-            public_key: activePublicKey,
-            network: 'Casper Testnet'
-        };
+            explorer: explorerUrl
+        });
         
-        const deployHash = Array.from({length: 64}, () => 
-            Math.floor(Math.random() * 16).toString(16)
-        ).join('');
-        
-        const txRecord = {
-            deployHash: deployHash,
-            action: action,
-            data: data,
-            timestamp: new Date().toISOString(),
-            explorerUrl: `https://testnet.cspr.live/deploy/${deployHash}`,
-            blockHeight: Math.floor(Math.random() * 1000000) + 500000
-        };
-        
-        onChainTransactions.push(txRecord);
-        
-        console.log('✅ Casper deploy created:', deployHash);
-        
-        alert(`✅ CASPER BLOCKCHAIN SUCCESS!\n\n` +
+        // 🔥 ALERT WITH CLICKABLE LINK
+        alert(`✅ TRANSACTION SUCCESSFUL!\n\n` +
               `Deploy Hash:\n${deployHash}\n\n` +
-              `Explorer URL:\n${txRecord.explorerUrl}\n\n` +
-              `Block Height: ${txRecord.blockHeight}\n\n` +
-              `Copy the deploy hash to verify on Casper Explorer!`);
+              `View on Casper Explorer:\n${explorerUrl}\n\n` +
+              `Copy the hash and paste it on Casper Testnet Explorer!`);
         
         return {
             success: true,
-            deployHash: deployHash,
-            explorerUrl: txRecord.explorerUrl,
-            blockHeight: txRecord.blockHeight
+            hash: deployHash,              // Changed from 'signature' to 'hash'
+            explorer: explorerUrl
         };
         
     } catch (error) {
-        console.error('❌ Casper error:', error);
-        alert(`❌ Casper blockchain error: ${error.message}`);
+        console.error('❌ Transaction error:', error);
+        alert(`❌ Transaction failed: ${error.message}`);
         return { success: false, error: error.message };
     }
 }
@@ -1338,18 +1371,18 @@ function populateBlockchainTab() {
             
             html += `
                 <div class="blockchain-entry onchain new-transaction">
-                    <h4>${tx.action}</h4>
-                    
-                    <div class="signature-label">
-                        🔐 Solana Transaction Signature
-                    </div>
-                    
-                    <div class="signature-box">
-                        <button class="copy-signature-btn" onclick="copySignature('${tx.signature}', this)">
-                            COPY
-                        </button>
-                        ${tx.signature}
-                    </div>
+                <h4>${tx.action}</h4>
+        
+                 <div class="signature-label">
+                    🔐 Casper Deploy Hash
+                </div>
+        
+                <div class="signature-box">
+                    <button class="copy-signature-btn" onclick="copySignature('${tx.hash}', this)">
+                        COPY
+                    </button>
+                    ${tx.hash}
+                </div>
                     
                     <div class="transaction-metadata">
                         <div class="metadata-item">
@@ -1376,11 +1409,11 @@ function populateBlockchainTab() {
                     </div>
                     
                     <a href="${tx.explorer}" target="_blank" class="explorer-link-button">
-                        View on Solana Explorer
+                     🔗 View on Casper Explorer
                     </a>
                     
                     <div style="margin-top: 15px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; font-size: 13px; color: #065f46;">
-                        <strong>💡 Pro Tip:</strong> Copy the signature above and paste it into <a href="https://explorer.solana.com/?cluster=devnet" target="_blank" style="color: #10b981; font-weight: bold;">Solana Explorer</a> to verify this transaction independently!
+                        <strong>💡 Pro Tip:</strong> Copy the deploy hash above and paste it into <a href="https://testnet.cspr.live/" target="_blank" style="color: #10b981; font-weight: bold;">Casper Testnet Explorer</a> to verify this transaction independently!
                     </div>
                 </div>
             `;
@@ -1594,6 +1627,7 @@ function showNotification(message, type = 'info') {
     document.body.appendChild(notif);
     setTimeout(() => notif.remove(), 8000);
 }
+
 
 
 
