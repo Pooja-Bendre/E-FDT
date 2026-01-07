@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/casper-js-sdk@2.15.0/dist/casper-js-sdk.min.js"></script>
+    
 </head>
 <body>
     <!-- Header with Animated Background -->
@@ -17,10 +18,10 @@
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-globe"></i>
-                    <h1>E-FDT Platform</h1>
+                    <h1>E-FDT Platform - Casper Edition</h1>
                 </div>
                 <p class="tagline">Environmental & Financial Digital Twin for Sustainable Development</p>
-                <p class="subtitle">🚀 AI-Powered Site Selection | 💎 Carbon Credit Verification | 🌡️ Climate Resilience Testing</p>
+                <p class="subtitle">🏆 CASPER HACKATHON 2026 | 🚀 AI-Powered Site Selection | 💎 Carbon Credit Verification</p>
 
                 <a href="invest.html" style="display: inline-block; margin-top: 15px; padding: 12px 24px; background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; border-radius: 12px; font-weight: bold; box-shadow: 0 4px 15px rgba(16,185,129,0.3);">
                     💰 Investment Marketplace → Invest in Projects
@@ -28,7 +29,7 @@
                 
                     <div id="walletDisplay" class="wallet-display" style="display: none;">
                         <i class="fas fa-wallet"></i> <span id="userWalletAddr">Connecting...</span>
-                        <span class="wallet-badge">SOLANA MAINNET</span>
+                        <span class="wallet-badge">CASPER TESTNET</span>
                     </div>
             </div>
         </div>
@@ -119,7 +120,7 @@
                 <div class="form-group" id="loginSection">
                     <label><i class="fas fa-user-lock"></i> BLOCKCHAIN AUTHENTICATION</label>
                     <button class="btn-secondary" id="connectWalletBtn">
-                        <i class="fas fa-link"></i> CONNECT WALLET
+                        <i class="fas fa-wallet"></i> CONNECT CASPER WALLET
                     </button>
                 </div>
 
@@ -529,6 +530,7 @@
     <script src="app.js"></script>
 </body>
 </html>
+
 
 
 
