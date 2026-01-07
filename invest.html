@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Marketplace | E-FDT Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="invest-styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-coins"></i>
+                    <h1>Investment Marketplace</h1>
+                </div>
+                <p class="tagline">Transparent Infrastructure Investments on Solana Blockchain</p>
+                <div id="walletDisplay" class="wallet-display" style="display: none;">
+                    <i class="fas fa-wallet"></i> <span id="userWalletAddr">Not Connected</span>
+                    <span class="wallet-badge">SOLANA DEVNET</span>
+                </div>
+                <button id="connectWalletBtn" class="btn-connect-wallet">
+                    <i class="fas fa-wallet"></i> Connect Wallet to Invest
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="marketplace-container">
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Filter by Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All Projects</option>
+                    <option value="government_approved">Government Approved</option>
+                    <option value="pending_approval">Pending Approval</option>
+                    <option value="funded">Fully Funded</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-city"></i> City:</label>
+                <select id="cityFilter">
+                    <option value="all">All Cities</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bangalore">Bangalore</option>
+                </select>
+            </div>
+            <div class="stats-summary">
+                <div class="stat-pill">
+                    <span class="stat-value" id="totalProjects">0</span>
+                    <span class="stat-label">Projects</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-value" id="totalInvestment">₹0</span>
+                    <span class="stat-label">Total Investment</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div id="projectsGrid" class="projects-grid">
+            <!-- Projects will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Investment Modal -->
+    <div id="investModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2><i class="fas fa-hand-holding-usd"></i> Invest in Project</h2>
+            <div id="modalProjectDetails"></div>
+            <div class="invest-form">
+                <label>Investment Amount (INR):</label>
+                <input type="number" id="investAmount" placeholder="Enter amount" min="10000">
+                <label>Investor Name (optional):</label>
+                <input type="text" id="investorName" placeholder="Your name or company">
+                <button id="confirmInvestBtn" class="btn-invest">
+                    <i class="fas fa-check-circle"></i> Confirm Investment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p><strong>E-FDT Investment Marketplace</strong> | Powered by Solana Blockchain</p>
+            <p><a href="index.html" style="color: white; text-decoration: underline;">← Back to Platform</a></p>
+        </div>
+    </footer>
+
+    <script src="invest.js"></script>
+</body>
+</html>
